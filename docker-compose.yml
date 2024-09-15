@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  book_catalog:
+    build:
+      context: ./book_catalog
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    environment:
+      - DATABASE_URL=postgresql://sit722task3_user:ePY0iq5NUHTb99dnHllVtQb5vCHdTr6l@dpg-crieusjv2p9s738h7nq0-a.oregon-postgres.render.com/sit722task3
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  inventory_management:
+    build:
+      context: ./inventory_management
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8000"
+    environment:
+      - DATABASE_URL=postgresql://sit722task3_user:ePY0iq5NUHTb99dnHllVtQb5vCHdTr6l@dpg-crieusjv2p9s738h7nq0-a.oregon-postgres.render.com/sit722task3
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=sit722task3
+      - POSTGRES_USER=sit722task3_user
+      - POSTGRES_PASSWORD=ePY0iq5NUHTb99dnHllVtQb5vCHdTr6l
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
